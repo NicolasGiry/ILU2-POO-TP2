@@ -3,6 +3,7 @@ package frontiere;
 import java.util.Scanner;
 
 import controleur.ControlAcheterProduit;
+import personnages.Gaulois;
 
 public class BoundaryAcheterProduit {
 	private Scanner scan = new Scanner(System.in);
@@ -14,24 +15,32 @@ public class BoundaryAcheterProduit {
 
 	public void acheterProduit(String nomAcheteur) {
 		Scanner scanner = new Scanner(System.in);
-		System.out.println("Quel produit voulez-vous acheter .");
+		System.out.println("Quel produit voulez-vous acheter ?");
 		String produit = scanner.next();
-		String vendeurs[] = controlAcheterProduit.getVendeursProduit("produit");
-		if (vendeurs.length == 0) {
-			System.out.println("Désolé, personne ne vend ce produit au marché");
+		Gaulois vendeurs[] = controlAcheterProduit.getVendeursProduit(produit);
+		if (vendeurs==null) {
+			System.out.println("Dï¿½solï¿½, personne ne vend ce produit au marchï¿½");
 		} else {
-			System.out.println("Chez quel commerçant souhaitez-vous acheter des fleurs ?");
+			System.out.println("Chez quel commerï¿½ant souhaitez-vous acheter des "+produit+" ?");
 			for (int i=0; i< vendeurs.length; i++) {
-				System.out.println(i+1+" - "+vendeurs[i]);
+				System.out.println(i+1+" - "+vendeurs[i].getNom());
 			}
 			int vendeur = scanner.nextInt() - 1;
-			System.out.println(nomAcheteur+" se déplace jusqu'à l'étal du vendeur "+vendeurs[vendeur]);
+			System.out.println(nomAcheteur+" se dï¿½place jusqu'ï¿½ l'ï¿½tal du vendeur "+vendeurs[vendeur].getNom());
 			System.out.println("Bonjour "+nomAcheteur+".\nCombien de "+produit+" voulez-vous acheter ?");
 			int quantite = scanner.nextInt();
-			System.out.println(controlAcheterProduit.acheter(vendeurs[vendeur], produit, quantite));
-			
-		}
-		
-		
+			int quantiteAchetee = controlAcheterProduit.acheterProduit(vendeurs[vendeur].getNom(), quantite);
+			if (quantiteAchetee==0) {
+				System.out.println(nomAcheteur + " veut acheter " + quantite + " " + produit
+						+ ", malheureusement il nâ€™y en a plus !");
+			} else if (quantiteAchetee < quantite) {
+				System.out.println(nomAcheteur + " veut acheter " + quantite + " " + produit
+						+ ", malheureusement " + vendeurs[vendeur].getNom() + " nâ€™en a plus que " + quantiteAchetee +
+						". "+nomAcheteur+" achÃ¨te tout le stock de "+vendeurs[vendeur].getNom()+".");
+			} else {
+				System.out.println(nomAcheteur + " achÃ¨te " + quantiteAchetee + " " + produit + " Ã  " + vendeurs[vendeur].getNom());
+				
+			}
+		}		
 	}
 }
